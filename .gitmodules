@@ -1,0 +1,3 @@
+[submodule "catkin_ws/src/subt-core"]
+	path = catkin_ws/src/subt-core
+	url = https://github.com/ARG-NCTU/subt-core
