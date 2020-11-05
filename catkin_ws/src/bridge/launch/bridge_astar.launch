@@ -1,0 +1,28 @@
+<launch>
+  <arg name="eth0" default="10.42.0.1" />
+  <arg name="wlan0" default="172.20.10.2" />
+
+   <node pkg="bridge" type="bridge.py" name="bridge_map_to_pc" args="$(arg wlan0)" output="screen">
+    <param name="bridge_type" value="OccupancyGrid" />
+    <param name="bridge_from" value="/racecar/depthcam_map" />
+    <param name="bridge_to" value="/teleop/depthcam_map" />
+  </node>
+
+  <node pkg="bridge" type="bridge.py" name="bridge_astar_path_to_pc" args="$(arg wlan0)" output="screen">
+    <param name="bridge_type" value="Path" />
+    <param name="bridge_from" value="/racecar/astar_node/planned_path" />
+    <param name="bridge_to" value="/teleop/astar_path" />
+  </node>
+
+  <node pkg="bridge" type="bridge.py" name="bridge_marker_to_pc" args="$(arg wlan0)" output="screen">
+    <param name="bridge_type" value="Marker" />
+    <param name="bridge_from" value="/racecar/astar_node/marker" />
+    <param name="bridge_to" value="/teleop/marker" />
+  </node>
+
+  <node pkg="bridge" type="bridge.py" name="bridge_marker_array_to_pc" args="$(arg wlan0)" output="screen">
+    <param name="bridge_type" value="MarkerArray" />
+    <param name="bridge_from" value="/racecar/astar_node/search_array" />
+    <param name="bridge_to" value="/teleop/search_array" />
+  </node>
+</launch>
