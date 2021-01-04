@@ -2,7 +2,7 @@
   <arg name="serial_no" default=""/>
   <arg name="json_file_path" default=""/>
   <arg name="camera" default="camera"/>
-  <arg name="veh" default=""/>
+  <arg name="veh" default="racecar"/>
   <arg name="tf_prefix" default="$(arg camera)"/>
 
   <arg name="fisheye_width" default="640"/>

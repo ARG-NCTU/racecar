@@ -4,13 +4,13 @@
 
   <node pkg="bridge" type="bridge.py" name="bridge_map_to_pc" args="$(arg wlan0)" output="screen">
     <param name="bridge_type" value="OccupancyGrid" />
-    <param name="bridge_from" value="/racecar/Omap" />
-    <param name="bridge_to" value="/teleop/Omap" />
+    <param name="bridge_from" value="/racecar/velodyne_to_grid/occupancy_grid" />
+    <param name="bridge_to" value="/teleop/depthcam_map" />
   </node>
 
   <node pkg="bridge" type="bridge.py" name="bridge_astar_path_to_pc" args="$(arg wlan0)" output="screen">
     <param name="bridge_type" value="Path" />
-    <param name="bridge_from" value="/racecar/planned_path" />
+    <param name="bridge_from" value="/racecar/astar_node/planned_path" />
     <param name="bridge_to" value="/teleop/astar_path" />
   </node>
 
@@ -25,4 +25,17 @@
     <param name="bridge_from" value="/racecar/astar_node/search_array" />
     <param name="bridge_to" value="/teleop/search_array" />
   </node>
+
+  <node pkg="bridge" type="bridge.py" name="bridge_pointcloud_to_pc" args="$(arg wlan0)" output="screen">
+    <param name="bridge_type" value="PointCloud2" />
+    <param name="bridge_from" value="/racecar/velodyne1/velodyne_points" />
+    <param name="bridge_to" value="/teleop/velodyne_points" />
+  </node>
+
+  <node pkg="bridge" type="bridge.py" name="bridge_joy_to_rpi" args="$(arg eth0)" output="screen">
+    <param name="bridge_type" value="Joy" />
+    <param name="bridge_from" value="/racecar/joy" />
+    <param name="bridge_to" value="/racecar/teleop/joy" />
+  </node>
+
 </launch>
