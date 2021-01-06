@@ -7,8 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /Grid1
-        - /Marker1
-        - /Marker2
         - /MarkerArray1
         - /Map1
         - /Path1
@@ -58,22 +56,6 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /racecar/astar_node/marker
-      Name: Marker
-      Namespaces:
-        "": true
-      Queue Size: 100
-      Value: true
-    - Class: rviz/Marker
-      Enabled: true
-      Marker Topic: /racecar/goal_point
-      Name: Marker
-      Namespaces:
-        pure_pursuit: true
-      Queue Size: 100
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
@@ -131,7 +113,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 1012
+      Max Intensity: 1008
       Min Color: 0; 0; 0
       Min Intensity: 1008
       Name: LaserScan
@@ -174,7 +156,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 15.650174140930176
+      Distance: 13.7721529006958
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -189,10 +171,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9097964763641357
+      Pitch: 0.9597964286804199
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.163578748703003
+      Yaw: 3.1285784244537354
     Saved: ~
 Window Geometry:
   Displays:
