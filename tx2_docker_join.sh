@@ -3,7 +3,7 @@
 # Typical usage: ./join.bash subt
 #
 
-IMG=argnctu/subt:arm64v8-xavier
+IMG=argnctu/subt:arm64v8-jp44
 
 xhost +
 containerid=$(docker ps -aqf "ancestor=${IMG}")&& echo $containerid

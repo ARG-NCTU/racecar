@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.2
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.4.4-tf2.3-py3
 
 ############################ USER ###############################
 # setup environment
@@ -90,28 +90,6 @@ RUN apt-get update && apt-get install -y \
 RUN rosdep init \
     && rosdep update
 
-#################################### GTSAM ####################################
-
-RUN cd ${HOME}/ \
-    && git clone https://github.com/borglab/gtsam.git \
-    && cd gtsam/ \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make install
-
-#################################### ISAM ####################################
-
-RUN cd ${HOME}/ \
-    && git clone https://github.com/ori-drs/isam \
-    && cd isam/ \
-    && make \
-    && make install
-
-COPY ./FindCholmod.cmake /usr/share/cmake-3.10/Modules
-COPY ./FindiSAM.cmake /usr/share/cmake-3.10/Modules
-
-
 ##################################### PIP ######################################
 
 RUN pip3 install --upgrade pip setuptools
@@ -132,10 +110,18 @@ RUN pip3 install \
 
 #################################### Pytorch ####################################
 WORKDIR /tmp
-RUN wget https://nvidia.box.com/shared/static/phqe92v26cbhqjohwtvxorrwnmrnfx1o.whl -O \
-    torch-1.4.0-cp36-cp36m-linux_aarch64.whl \
-    && pip3 install torch-1.4.0-cp36-cp36m-linux_aarch64.whl torchvision \
-    && rm -rf  torch-1.4.0-cp36-cp36m-linux_aarch64.whl 
+RUN wget https://nvidia.box.com/shared/static/9eptse6jyly1ggt9axbja2yrmj6pbarc.whl -O \
+    torch-1.6.0-cp36-cp36m-linux_aarch64.whl \
+    && pip3 install torch-1.6.0-cp36-cp36m-linux_aarch64.whl torchvision \
+    && rm -rf  torch-1.6.0-cp36-cp36m-linux_aarch64.whl 
+
+RUN apt-get update && apt-get install -y \ 
+    libopenblas-dev \
+    gcc \
+    gfortran
+
+RUN pip3 install \
+    scipy==1.2.0
 
 #################################  procman  ########################################
 RUN cd ${HOME} && git clone https://github.com/lcm-proj/lcm \
@@ -154,34 +140,37 @@ RUN cd ${HOME} && git clone http://github.com/ARG-NCTU/procman \
 
 ######################################## realsense ########################################
 
-RUN apt-get update && apt-get install -y \
-    libsuitesparse-dev\
-    software-properties-common \
-    libusb-1.0-0-dev \
-    libx11-dev \
-    xorg-dev \
-    libgl1-mesa-dev \
-    libglu1-mesa-dev \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y \
+#     libsuitesparse-dev\
+#     software-properties-common \
+#     libusb-1.0-0-dev \
+#     libx11-dev \
+#     xorg-dev \
+#     libgl1-mesa-dev \
+#     libglu1-mesa-dev \
+#     && rm -rf /var/lib/apt/lists/*
 
-# set the version of the realsense library
-ENV LIBREALSENSE_VERSION 2.36.0
-RUN wget https://github.com/IntelRealSense/librealsense/archive/v${LIBREALSENSE_VERSION}.tar.gz --no-check-certificate && \
-    tar -xvzf v${LIBREALSENSE_VERSION}.tar.gz && \
-    rm v${LIBREALSENSE_VERSION}.tar.gz && \
-    mkdir -p librealsense-${LIBREALSENSE_VERSION}/build && \
-    cd librealsense-${LIBREALSENSE_VERSION}/build && \
-    cmake .. && \
-    make && \
-    make install && \
-    rm -rf librealsense-${LIBREALSENSE_VERSION}
+# # set the version of the realsense library
+# ENV LIBREALSENSE_VERSION 2.36.0
+# RUN wget https://github.com/IntelRealSense/librealsense/archive/v${LIBREALSENSE_VERSION}.tar.gz --no-check-certificate && \
+#     tar -xvzf v${LIBREALSENSE_VERSION}.tar.gz && \
+#     rm v${LIBREALSENSE_VERSION}.tar.gz && \
+#     mkdir -p librealsense-${LIBREALSENSE_VERSION}/build && \
+#     cd librealsense-${LIBREALSENSE_VERSION}/build && \
+#     cmake .. && \
+#     make && \
+#     make install && \
+#     rm -rf librealsense-${LIBREALSENSE_VERSION}
 
 ##################################### setting #####################################
 RUN chown -R ${USER}:${USER} ${HOME}/
 RUN echo "${USER} ALL=(ALL)  ALL" > /etc/sudoers
+RUN usermod -aG video argsubt
 
 # setup entrypoint
 COPY ./ros_entrypoint.sh /
+
+RUN chmod 777 /ros_entrypoint.sh
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 

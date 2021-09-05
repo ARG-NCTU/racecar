@@ -32,11 +32,12 @@ docker run -it \
     -v "/etc/localtime:/etc/localtime:ro" \
     -v "/dev:/dev" \
     -v "/home/$USER/.bashrc:/home/argsubt/.bashrc" \
+    --workdir "/home/argsubt/racecar" \
     --user root \
     --name argsubt \
     --runtime nvidia \
     --network host \
     --rm \
     --privileged \
-    argnctu/subt:arm64v8-xavier \
+    argnctu/subt:arm64v8-jp44 \
     bash 
