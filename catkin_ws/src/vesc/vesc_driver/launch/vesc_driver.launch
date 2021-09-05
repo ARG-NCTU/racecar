@@ -6,7 +6,7 @@
   <group ns="$(arg veh)">
     
     <!-- Convert cmd_vel to ackermann_drive -->
-    <node name="cmd_vel_to_ackermann_drive" pkg="astar_path_planning" type="cmd_vel_to_ackermann_drive.py" output="screen" required="true">
+    <node name="cmd_vel_to_ackermann_drive" pkg="racecar" type="cmd_vel_to_ackermann_drive.py" output="screen" required="true">
     </node>
 
     <!-- start electronic speed controller driver -->
