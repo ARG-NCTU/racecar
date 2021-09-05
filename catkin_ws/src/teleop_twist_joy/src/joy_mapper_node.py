@@ -25,13 +25,10 @@ class JoyMapper(object):
         # Publishers
         self.pub_cmd_vel = rospy.Publisher("cmd_vel", Twist, queue_size=1)
         self.pub_is_auto = rospy.Publisher("is_auto", Bool, queue_size=1)
-        self.pub_e_stop = rospy.Publisher("e_stop_joy", Bool, queue_size=1)
     
         # Subscribers
         self.sub_joy = rospy.Subscriber("joy", Joy, self.cbJoy, queue_size=1)
-        self.sub_remote_joy = rospy.Subscriber("remote_joy", Joy, self.cb_remote_joy, queue_size=1)
-        self.sub_auto_control = rospy.Subscriber("autonomous/cmd_vel", Twist, self.cb_auto, queue_size=1)
-        self.sub_height_control = rospy.Subscriber("altitude_control_node/control", Float32, self.cb_height_control, queue_size=1)
+        
 
         # Timer
         self.fusion_timer = rospy.Timer(rospy.Duration(0.1), self.command_fusion)
@@ -42,14 +39,6 @@ class JoyMapper(object):
         if not self.remote_override:
             self.processButtons(msg)
             self.processAxes(msg)
-
-    def cb_remote_joy(sel, msg):
-        # if remote user overrides
-        self.remote_override = msg.buttons[4]
-        if self.remote_override:
-            self.processButtons(msg)
-            self.processAxes(msg)
-
 
     def command_fusion(self, event):
         cmd_msg = Twist()
@@ -64,17 +53,6 @@ class JoyMapper(object):
         rospy.loginfo("%f %f"%(cmd_msg.angular.z,cmd_msg.linear.x))
 
         self.pub_cmd_vel.publish(cmd_msg)
-
-    def cb_auto(self, msg):
-        cmd_vel = Twist()
-        if self.auto_en:
-            cmd_vel = msg
-            if self.height_control_en:
-                 cmd_vel.linear.z = self.height_cmd
-            self.pub_cmd_vel.publish(cmd_vel)
-
-    def cb_height_control(self, msg):
-        self.height_cmd = max(msg.data, 0)
 
     # Axis List index of joy.axes array:
     # 0: Left Horizontal (Left +)
@@ -120,30 +98,15 @@ class JoyMapper(object):
     # 9: Left joystick
     # 10: Right joystick
     def processButtons(self, joy_msg):
-        # Button A
-        if joy_msg.buttons[0]:
-            self.height_control_en = not self.height_control_en
-            if self.height_control_en:
-                rospy.loginfo("enable height control")
-            else: 
-                rospy.loginfo("disable height control")
         # Button start
-        if joy_msg.buttons[1]:
+        if joy_msg.buttons[7]:
             self.auto_en = True
             rospy.loginfo("start autonomous")
         # Button back
-        if joy_msg.buttons[3]:
+        if joy_msg.buttons[6]:
             self.auto_en = False
             rospy.loginfo("joystick mode")
 
-        ## Left back button
-        if (joy_msg.buttons[4] == 1):
-            # EStop ON
-            self.pub_e_stop.publish(True)
-        ## Right back button
-        elif (joy_msg.buttons[5] == 1):
-            # EStop OFF
-            self.pub_e_stop.publish(False)
 
 if __name__ == "__main__":
 	rospy.init_node("joy_mapper_node",anonymous=False)
